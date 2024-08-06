@@ -28,8 +28,10 @@ function FoodList() {
 
   return (
     <div className="foodList">
-      {foods.map((food) => (
-        <Card food={food} />
+      {foods.map((food, index) => (
+        <>
+          <Card food={food} />
+        </>
       ))}
     </div>
   );

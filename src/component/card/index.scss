@@ -1,14 +1,18 @@
 .food-card {
-  width: calc(100% / 4);
+  width: calc(100% / 4 - 20px);
+  display: block;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 0 17px 6px rgba(0, 0, 0, 0.1);
   transition: all 0.4s;
+  //flex: 0 0 calc(25% - 20px); // 1 row = 4 card(item) | syntax =  flex : flex-grow flex-shrink flex-basis|auto|initial|inherit;
   &:hover {
     transform: scale(1.02);
   }
   img {
     width: 100%;
+    height: 400px;
+    object-fit: contain; // cân chỉnh hình ảnh để chống vỡ hình
   }
   &__information {
     display: flex;

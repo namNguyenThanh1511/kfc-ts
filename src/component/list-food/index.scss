@@ -1,5 +1,7 @@
 .foodList {
+  width: 100%;
   display: flex;
+  flex-wrap: wrap; // dùng để bọc lại/xuống hàng các item đang đc flex , kết hợp với flex: ... ... ... để giới hạn số item đc xuất hiện trong 1 row
   gap: 20px;
   padding: 20px 100px;
 }
