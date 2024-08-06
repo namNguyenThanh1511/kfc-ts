@@ -1,0 +1,66 @@
+.header {
+  background-color: #fff;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 100px;
+  border-bottom: solid 1px rgba($color: #000000, $alpha: 0.1);
+  &__left,
+  &__right {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+  &__navigation {
+    display: flex;
+    gap: 20px;
+    li {
+      list-style: none;
+      font-size: 15px;
+      font-weight: 600;
+      color: #202114;
+      text-transform: uppercase;
+      padding-bottom: 5px;
+      &::after {
+        content: "";
+        display: block;
+        width: 0;
+        height: 2px;
+        background-color: #000;
+        transition: all 0.3s;
+      }
+      &:hover {
+        &::after {
+          content: "";
+          display: block;
+          width: 100%;
+          height: 2px;
+          background-color: #000;
+        }
+      }
+    }
+  }
+  &__cart {
+    width: 40px;
+    height: 100%;
+
+    background-image: url("https://i.ibb.co/kXTK7Vw/kfc-icon-PNG-removebg-preview.png");
+    background-size: cover;
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+    &__number {
+      margin-top: 5px;
+    }
+  }
+  &__account {
+    .icon {
+      font-size: 30px;
+      width: 40px;
+      height: 40px;
+      border: solid 1px #000;
+      justify-content: center;
+      border-radius: 50%;
+    }
+  }
+}
