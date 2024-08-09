@@ -1,4 +1,5 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const api = axios.create({
   baseURL: "http://142.93.49.109:8080/api/",
@@ -16,6 +17,7 @@ api.interceptors.request.use(
   },
   function (error) {
     // Do something with request error
+
     return Promise.reject(error);
   }
 );
