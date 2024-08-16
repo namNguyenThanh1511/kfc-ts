@@ -20,6 +20,8 @@ function getItem(label: React.ReactNode, key: React.Key, icon?: React.ReactNode,
 const items: MenuItem[] = [
   getItem("Category", "category", <PieChartOutlined />),
   getItem("Food", "food", <PieChartOutlined />),
+  getItem("Product", "product", <PieChartOutlined />),
+  getItem("Voucher", "voucher", <PieChartOutlined />),
 ]; // param 1 : name ; param 2 : key ; param 3 : icon
 
 const Dashboard: React.FC = () => {

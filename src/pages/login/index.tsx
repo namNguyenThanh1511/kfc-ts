@@ -14,10 +14,15 @@ function Login() {
   const handleLogin = async (values) => {
     try {
       const response = await api.post("login", values);
-      const { token } = response.data; // const token = response.data.token -> technique : Object Destructuring
-      localStorage.setItem("token", token); 
+      const { token, role } = response.data; // const token = response.data.token -> technique : Object Destructuring
+      localStorage.setItem("token", token);
       toast.success("login succeed");
-      navigate("/");
+      if (role === "ADMIN") {
+        navigate("/dashboard");
+      } else {
+        navigate("/");
+      }
+
       //lưu trữ thông tin của user xuống redux để các component đều truy cập đc
       dispatch(login(response.data));
     } catch (err) {
