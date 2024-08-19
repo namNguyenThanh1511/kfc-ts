@@ -5,31 +5,33 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useForm } from "antd/es/form/Form";
 import api from "../../config/api";
+import { endOfToday } from "date-fns";
+import moment from "moment";
 export interface Column {
   title: string;
   dataIndex: string;
   key: string;
   render?: (value: any) => any;
 }
-interface ManageTemplateProps {
+interface DashboardTemplateProps {
   title: string;
   columns: Column[];
   formItems: React.ReactElement;
   apiURI: string;
 }
-function ManageTemplate({ columns, title, formItems, apiURI }: ManageTemplateProps) {
-  const [categoryList, setCategoryList] = useState([]);
+function DashboardTemplate({ columns, title, formItems, apiURI }: DashboardTemplateProps) {
+  const [dataSource, setDataSource] = useState([]);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [formTag] = useForm();
   const [loading, setLoading] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
 
-  const fetchCategoryList = async () => {
+  const fetchData = async () => {
     try {
       const response = await api.get(apiURI);
-      setCategoryList(response.data);
       setIsFetching(false);
+      setDataSource(response.data);
     } catch (err) {
       console.log(err);
 
@@ -37,7 +39,7 @@ function ManageTemplate({ columns, title, formItems, apiURI }: ManageTemplatePro
     }
   };
   useEffect(() => {
-    fetchCategoryList();
+    fetchData();
   }, []);
   const handleOpenModal = () => {
     setIsOpenModal(true);
@@ -61,21 +63,51 @@ function ManageTemplate({ columns, title, formItems, apiURI }: ManageTemplatePro
       formTag.resetFields();
       handleCloseModal();
 
-      fetchCategoryList();
+      fetchData();
     } catch (error) {
       toast.error(error.response.data);
     }
     setLoading(false); // cancel loading when calling api done
   };
-  const handleDeleteCategory = async (id: number) => {
+  const handleDelete = async (id: string) => {
     try {
       await api.delete(`${apiURI}/${id}`);
       toast.success("Delete successfully");
-      fetchCategoryList();
+      fetchData();
     } catch (err) {
       toast.error(err.response.data);
     }
   };
+  const enhancedColumns = columns.map((column) => {
+    if (column.dataIndex === "id") {
+      return {
+        ...column,
+        render: (id, record) => (
+          <>
+            <Button onClick={() => handleDelete(id)}>Delete</Button>
+            <Button
+              onClick={() => {
+                const recordValidated = {
+                  ...record,
+
+                  startAt: record.startAt ? moment(record.startAt, "YYYY-MM-DD") : null,
+                  endAt: record.endAt ? moment(record.startAt, "YYYY-MM-DD") : null,
+                  createAt: record.createAt ? moment(record.startAt, "YYYY-MM-DD") : null,
+                };
+                console.log(recordValidated);
+                formTag.setFieldsValue(recordValidated);
+                handleOpenModal();
+              }}
+            >
+              Update
+            </Button>
+          </>
+        ),
+      };
+    } else {
+      return column;
+    }
+  });
   return (
     <div>
       <Button
@@ -87,7 +119,7 @@ function ManageTemplate({ columns, title, formItems, apiURI }: ManageTemplatePro
       >
         Add new {title}
       </Button>
-      <Table columns={columns} dataSource={categoryList} loading={isFetching} />
+      <Table columns={enhancedColumns} dataSource={dataSource} loading={isFetching} />
       <Modal
         open={isOpenModal}
         title={isUpdate === true ? `Edit ${title}` : `Create new ${title}`}
@@ -121,4 +153,4 @@ function ManageTemplate({ columns, title, formItems, apiURI }: ManageTemplatePro
   );
 }
 
-export default ManageTemplate;
+export default DashboardTemplate;

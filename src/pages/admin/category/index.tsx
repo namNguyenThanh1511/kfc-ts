@@ -1,26 +1,29 @@
 import React from "react";
-import ManageTemplate, { Column } from "../../../component/ManageDashboard";
-import { Form, Input } from "antd";
+import { Column } from "../../../component/DashboardTemplate";
+import { Button, Form, Input } from "antd";
 import TextArea from "antd/es/input/TextArea";
+import DashboardTemplate from "../../../component/DashboardTemplate";
 
 function ManageCategory() {
   const title = "category";
   const columns: Column[] = [
     // khai bao kieu du lieu de dc nhac lenh
-    {
-      title: "ID",
-      dataIndex: "id",
-      key: "id",
-    },
+
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
     },
+
     {
       title: "Description",
       dataIndex: "description",
       key: "description",
+    },
+    {
+      title: "action",
+      dataIndex: "id",
+      key: "id",
     },
   ];
   const formItems = (
@@ -35,7 +38,7 @@ function ManageCategory() {
   );
   return (
     <div>
-      <ManageTemplate apiURI="category" formItems={formItems} title={title} columns={columns} />
+      <DashboardTemplate apiURI="category" formItems={formItems} title={title} columns={columns} />
     </div>
   );
 }

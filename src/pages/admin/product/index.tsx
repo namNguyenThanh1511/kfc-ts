@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
-import ManageTemplate from "../../../component/ManageDashboard";
+import { Column } from "../../../component/DashboardTemplate";
 import { Form, Input, InputNumber, Select } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import api from "../../../config/api";
+import DashboardTemplate from "../../../component/DashboardTemplate";
 
 function ManageProductPage() {
   const title = "product";
-  const columns = [
+  const columns: Column[] = [
     {
       title: "Name",
       dataIndex: "name",
@@ -32,12 +33,17 @@ function ManageProductPage() {
       dataIndex: "image",
       key: "image",
     },
+    {
+      title: "action",
+      dataIndex: "id",
+      key: "id",
+    },
   ];
   const [categoryList, setCategoryList] = useState([]);
 
   const fetchCategoryList = async () => {
     try {
-      const response = await api.get("catrgory");
+      const response = await api.get("category");
       console.log(response.data);
       setCategoryList(response.data);
     } catch (error) {
@@ -67,7 +73,7 @@ function ManageProductPage() {
   );
   return (
     <div>
-      <ManageTemplate apiURI="product" formItems={formItems} columns={columns} title={title}></ManageTemplate>
+      <DashboardTemplate apiURI="product" formItems={formItems} columns={columns} title={title}></DashboardTemplate>
     </div>
   );
 }

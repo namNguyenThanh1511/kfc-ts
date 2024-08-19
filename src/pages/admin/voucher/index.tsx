@@ -1,5 +1,5 @@
 import React from "react";
-import ManageTemplate, { Column } from "../../../component/ManageDashboard";
+import ManageTemplate, { Column } from "../../../component/DashboardTemplate";
 import { DatePicker, Form, Input, InputNumber } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import dayjs from "dayjs";
@@ -42,6 +42,11 @@ function ManageVoucher() {
       title: "value",
       dataIndex: "value",
       key: "value",
+    },
+    {
+      title: "action",
+      dataIndex: "id",
+      key: "id",
     },
   ];
   const formItems = (
