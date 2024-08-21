@@ -20,11 +20,6 @@ function ManageCategory() {
       dataIndex: "description",
       key: "description",
     },
-    {
-      title: "action",
-      dataIndex: "id",
-      key: "id",
-    },
   ];
   const formItems = (
     <>

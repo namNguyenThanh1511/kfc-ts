@@ -1,4 +1,4 @@
-import { Button, Form, Input, Modal, Popconfirm, Table } from "antd";
+import { Button, Form, Input, Modal, Popconfirm, Select, Table } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
@@ -7,6 +7,7 @@ import { useForm } from "antd/es/form/Form";
 import api from "../../config/api";
 import { endOfToday } from "date-fns";
 import moment from "moment";
+import dayjs from "dayjs";
 export interface Column {
   title: string;
   dataIndex: string;
@@ -26,12 +27,79 @@ function DashboardTemplate({ columns, title, formItems, apiURI }: DashboardTempl
   const [loading, setLoading] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
+  const [tableColumns, setTableColumns] = useState<Column[]>([]);
+  useEffect(() => {
+    const newColumns = [
+      ...columns,
+      {
+        title: "Action",
+        dataIndex: "id",
+        key: "id",
+        render: (id, record) => (
+          <>
+            <Popconfirm
+              title={`Delete ${title}`}
+              description="Are you sure to delete ?"
+              onConfirm={() => handleDelete(id)}
+            >
+              <Button>Delete</Button>
+            </Popconfirm>
 
+            <Button
+              onClick={() => {
+                const newRecord = { ...record };
+                console.log(record);
+                setIsUpdate(true);
+                //check all attributes which instance of is datetime
+                for (var key of Object.keys(newRecord)) {
+                  // loop all attributes inside an object
+                  // newRecord['id'] <=> newRecord.id
+                  // use dayjs to filter which key have datetime data type
+                  //console.log(dayjs(newRecord[key]));
+                  const value = newRecord[key];
+                  var date: any = new Date(value);
+                  const time: any = date.getTime();
+                  console.log(key + " " + date);
+                  console.log(time);
+                  if (isNaN(time) || typeof value === "number") {
+                    //isNaN : is not a number
+                    //=> not datetime type
+                    newRecord[key] = record[key]; //keep original value
+                    console.log(key + " is not a date");
+                  } else {
+                    //=> datetime data type => need formatting to antd format => can you antd form function
+                    newRecord[key] = dayjs(value); // antd usually go with dayjs
+                    console.log(key + " is a date");
+                  }
+                  //console.log("new record :" + newRecord);
+                }
+                formTag.setFieldsValue(newRecord);
+                handleOpenModal();
+              }}
+            >
+              Update
+            </Button>
+          </>
+        ),
+      },
+    ];
+    setTableColumns(newColumns);
+  }, [columns]);
   const fetchData = async () => {
     try {
       const response = await api.get(apiURI);
+      let sortedData = [];
+      if (apiURI === "category") {
+        sortedData = sortDataSourceASCbyName(response.data);
+      } else if (apiURI === "voucher") {
+        sortedData = sortDataSourceDESCByDateAndField(response.data, "createAt", "value", "DESC");
+      } else {
+        sortedData = response.data;
+      }
+      console.log("fetched");
       setIsFetching(false);
-      setDataSource(response.data);
+
+      setDataSource(sortedData);
     } catch (err) {
       console.log(err);
 
@@ -40,6 +108,7 @@ function DashboardTemplate({ columns, title, formItems, apiURI }: DashboardTempl
   };
   useEffect(() => {
     fetchData();
+    //sortDataSourceASC(); // ko nên để sort ở đây vì react sẽ excutute sort trước vì fetchData() là hàm async ( bất đồng bộ )
   }, []);
   const handleOpenModal = () => {
     setIsOpenModal(true);
@@ -108,6 +177,40 @@ function DashboardTemplate({ columns, title, formItems, apiURI }: DashboardTempl
       return column;
     }
   });
+  const sortDataSourceASCbyName = (data) => {
+    return data.sort((a, b) => a.name.localeCompare(b.name)); // sắp xếp cho các kí tự ko phải ASCII ( có dấu )
+
+    //src : https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
+  };
+  const sortDataSourceBy = (data, valueField, mode) => {
+    return data.sort((a, b) => {
+      if (mode === "DESC") {
+        return b[valueField] - a[valueField];
+      }
+      return a[valueField] - b[valueField];
+    });
+  };
+  const sortDataSourceDESCByDateAndField = (data, dateField, secondField, mode) => {
+    return data.sort((a, b) => {
+      const dateA = new Date(a[dateField]);
+      const dateB = new Date(b[dateField]);
+      if (mode === "ASC") {
+        return dateA - dateB;
+      }
+      if (dateB - dateA !== 0) {
+        return dateB - dateA;
+      }
+
+      if (a[secondField] < b[secondField]) {
+        return -1;
+      }
+      if (a[secondField] > b[secondField]) {
+        return 1;
+      }
+      return 0;
+    });
+  };
+
   return (
     <div>
       <Button
@@ -119,7 +222,16 @@ function DashboardTemplate({ columns, title, formItems, apiURI }: DashboardTempl
       >
         Add new {title}
       </Button>
-      <Table columns={enhancedColumns} dataSource={dataSource} loading={isFetching} />
+      <Button
+        onClick={() => {
+          const sortedData = sortDataSourceBy(dataSource, "value", "ASC");
+          setDataSource(sortedData);
+          console.log(sortedData);
+        }}
+      >
+        Sort data by value
+      </Button>
+      <Table columns={tableColumns} dataSource={dataSource} loading={isFetching} />
       <Modal
         open={isOpenModal}
         title={isUpdate === true ? `Edit ${title}` : `Create new ${title}`}

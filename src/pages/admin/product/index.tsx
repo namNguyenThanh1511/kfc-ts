@@ -33,11 +33,6 @@ function ManageProductPage() {
       dataIndex: "image",
       key: "image",
     },
-    {
-      title: "action",
-      dataIndex: "id",
-      key: "id",
-    },
   ];
   const [categoryList, setCategoryList] = useState([]);
 

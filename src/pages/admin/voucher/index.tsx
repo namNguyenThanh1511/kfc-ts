@@ -43,11 +43,6 @@ function ManageVoucher() {
       dataIndex: "value",
       key: "value",
     },
-    {
-      title: "action",
-      dataIndex: "id",
-      key: "id",
-    },
   ];
   const formItems = (
     <>
