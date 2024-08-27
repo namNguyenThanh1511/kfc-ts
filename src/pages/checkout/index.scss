@@ -1,0 +1,16 @@
+.check-out {
+  height: 300px;
+  background-color: blue;
+  display: flex;
+  padding: 0 30px;
+  &__item {
+    height: 100%;
+    background-color: red;
+    width: 70%;
+  }
+  &__details {
+    height: 100%;
+    background-color: yellow;
+    width: 30%;
+  }
+}

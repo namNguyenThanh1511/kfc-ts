@@ -1,12 +1,18 @@
 import React from "react";
 import { Food } from "../../model/food";
 import "./index.scss";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../redux/feature/cartSlice";
 type CardProps = {
   food: Food;
 };
 function Card({ food }: CardProps) {
+  const dispatch = useDispatch();
+  const handleAddToCart = () => {
+    dispatch(addToCart(food));
+  };
   return (
-    <div className="food-card">
+    <div onClick={handleAddToCart} className="food-card">
       <img src={food.image} alt="" />
       <div className="food-card__wrapper">
         <div className="food-card__information">

@@ -9,6 +9,7 @@ import ManageCategory from "./pages/admin/category";
 import ManageFood from "./pages/admin/food";
 import ManageProductPage from "./pages/admin/product";
 import ManageVoucher from "./pages/admin/voucher";
+import CheckOutPage from "./pages/checkout";
 
 function App() {
   const router = createBrowserRouter([
@@ -27,6 +28,10 @@ function App() {
         {
           path: "/register",
           element: <Register />,
+        },
+        {
+          path: "/checkout",
+          element: <CheckOutPage />,
         },
       ],
     },

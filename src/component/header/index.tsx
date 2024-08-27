@@ -2,8 +2,13 @@ import React from "react";
 import { UserOutlined } from "@ant-design/icons";
 import "./index.scss";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import { Badge } from "antd";
+import { ShoppingCartOutlined } from "@ant-design/icons";
 function Header() {
   const navigate = useNavigate();
+  const cart = useSelector((store: RootState) => store.cart);
   return (
     <div className="header">
       <div className="header__left">
@@ -21,9 +26,19 @@ function Header() {
         </ul>
       </div>
       <div className="header__right">
-        <div className="header__cart">
-          <span className="header__cart__number">0</span>
-        </div>
+        <Badge count={cart?.length} showZero>
+          {/* <div className="header__cart">
+            <span className="header__cart__number">{cart.length}</span>
+          </div> */}
+          <ShoppingCartOutlined
+            onClick={() => {
+              navigate("/checkout");
+            }}
+            width={300}
+            height={300}
+          />
+        </Badge>
+
         <div className="header__account">
           <UserOutlined className="icon" onClick={() => navigate("/login")} />
         </div>

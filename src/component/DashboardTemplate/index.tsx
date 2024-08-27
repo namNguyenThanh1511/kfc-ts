@@ -8,6 +8,7 @@ import api from "../../config/api";
 import { endOfToday } from "date-fns";
 import moment from "moment";
 import dayjs from "dayjs";
+import uploadFile from "../../utils/upload";
 export interface Column {
   title: string;
   dataIndex: string;
@@ -120,8 +121,20 @@ function DashboardTemplate({ columns, title, formItems, apiURI }: DashboardTempl
     setLoading(true); // loading save button when calling api
 
     try {
+      let url = null;
+      console.log(values);
+      console.log(typeof values.image === "object");
+      if (typeof values.image === "object") {
+        url = await uploadFile(values.image.file.originFileObj);
+        values.image = url;
+      } else {
+        // not upload any new file -> keep old image -> do nothing
+        console.log("not a file");
+      }
+
       if (values.id) {
         // id exist => update
+
         await api.put(`${apiURI}/${values.id}`, values);
         toast.success("update succesfully");
       } else {
@@ -131,7 +144,6 @@ function DashboardTemplate({ columns, title, formItems, apiURI }: DashboardTempl
       }
       formTag.resetFields();
       handleCloseModal();
-
       fetchData();
     } catch (error) {
       toast.error(error.response.data);
@@ -183,7 +195,10 @@ function DashboardTemplate({ columns, title, formItems, apiURI }: DashboardTempl
     //src : https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
   };
   const sortDataSourceBy = (data, valueField, mode) => {
-    return data.sort((a, b) => {
+    return [...data].sort((a, b) => {
+      // [...data] : copy lại data ban đầu và sort để state chắc chắn đc update khi call setDataSource
+      // vì nếu sort trực tiếp vào array gốc , có thể react ko nhận ra được state changes vì biến tham chiếu đến state đó ko thay đổi
+      // nếu copy một array  khác và sort vào array đó -> con trỏ thay đổi -> react phát hiện đc sự thay đổi
       if (mode === "DESC") {
         return b[valueField] - a[valueField];
       }
@@ -191,7 +206,7 @@ function DashboardTemplate({ columns, title, formItems, apiURI }: DashboardTempl
     });
   };
   const sortDataSourceDESCByDateAndField = (data, dateField, secondField, mode) => {
-    return data.sort((a, b) => {
+    return [...data].sort((a, b) => {
       const dateA = new Date(a[dateField]);
       const dateB = new Date(b[dateField]);
       if (mode === "ASC") {
