@@ -9,6 +9,11 @@ import { endOfToday } from "date-fns";
 import moment from "moment";
 import dayjs from "dayjs";
 import uploadFile from "../../utils/upload";
+import {
+  sortDataBy,
+  sortDataSourceDESCByDateAndField,
+  sortDataWithLocale,
+} from "../../utils/sorting";
 export interface Column {
   title: string;
   dataIndex: string;
@@ -29,6 +34,7 @@ function DashboardTemplate({ columns, title, formItems, apiURI }: DashboardTempl
   const [isUpdate, setIsUpdate] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
   const [tableColumns, setTableColumns] = useState<Column[]>([]);
+  const [onSorting, setOnSorting] = useState(false);
   useEffect(() => {
     const newColumns = [
       ...columns,
@@ -91,26 +97,29 @@ function DashboardTemplate({ columns, title, formItems, apiURI }: DashboardTempl
       const response = await api.get(apiURI);
       let sortedData = [];
       if (apiURI === "category") {
-        sortedData = sortDataSourceASCbyName(response.data);
+        //sortedData = sortDataBy(response.data, "name", "DESC");
+        sortedData = sortDataWithLocale(response.data, "name", "ASC");
+        console.log(sortedData);
       } else if (apiURI === "voucher") {
         sortedData = sortDataSourceDESCByDateAndField(response.data, "createAt", "value", "DESC");
       } else {
         sortedData = response.data;
       }
+      if (onSorting) {
+        sortedData = sortDataBy(response.data, "value", "ASC");
+      }
       console.log("fetched");
       setIsFetching(false);
-
       setDataSource(sortedData);
     } catch (err) {
       console.log(err);
-
       toast.error(err.response.data);
     }
   };
   useEffect(() => {
     fetchData();
     //sortDataSourceASC(); // ko nên để sort ở đây vì react sẽ excutute sort trước vì fetchData() là hàm async ( bất đồng bộ )
-  }, []);
+  }, [onSorting]);
   const handleOpenModal = () => {
     setIsOpenModal(true);
   };
@@ -134,7 +143,6 @@ function DashboardTemplate({ columns, title, formItems, apiURI }: DashboardTempl
 
       if (values.id) {
         // id exist => update
-
         await api.put(`${apiURI}/${values.id}`, values);
         toast.success("update succesfully");
       } else {
@@ -189,43 +197,9 @@ function DashboardTemplate({ columns, title, formItems, apiURI }: DashboardTempl
       return column;
     }
   });
-  const sortDataSourceASCbyName = (data) => {
-    return data.sort((a, b) => a.name.localeCompare(b.name)); // sắp xếp cho các kí tự ko phải ASCII ( có dấu )
-
-    //src : https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
+  const handleOnSorting = () => {
+    setOnSorting(!onSorting);
   };
-  const sortDataSourceBy = (data, valueField, mode) => {
-    return [...data].sort((a, b) => {
-      // [...data] : copy lại data ban đầu và sort để state chắc chắn đc update khi call setDataSource
-      // vì nếu sort trực tiếp vào array gốc , có thể react ko nhận ra được state changes vì biến tham chiếu đến state đó ko thay đổi
-      // nếu copy một array  khác và sort vào array đó -> con trỏ thay đổi -> react phát hiện đc sự thay đổi
-      if (mode === "DESC") {
-        return b[valueField] - a[valueField];
-      }
-      return a[valueField] - b[valueField];
-    });
-  };
-  const sortDataSourceDESCByDateAndField = (data, dateField, secondField, mode) => {
-    return [...data].sort((a, b) => {
-      const dateA = new Date(a[dateField]);
-      const dateB = new Date(b[dateField]);
-      if (mode === "ASC") {
-        return dateA - dateB;
-      }
-      if (dateB - dateA !== 0) {
-        return dateB - dateA;
-      }
-
-      if (a[secondField] < b[secondField]) {
-        return -1;
-      }
-      if (a[secondField] > b[secondField]) {
-        return 1;
-      }
-      return 0;
-    });
-  };
-
   return (
     <div>
       <Button
@@ -239,9 +213,7 @@ function DashboardTemplate({ columns, title, formItems, apiURI }: DashboardTempl
       </Button>
       <Button
         onClick={() => {
-          const sortedData = sortDataSourceBy(dataSource, "value", "ASC");
-          setDataSource(sortedData);
-          console.log(sortedData);
+          handleOnSorting();
         }}
       >
         Sort data by value

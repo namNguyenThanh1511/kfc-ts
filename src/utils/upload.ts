@@ -8,4 +8,5 @@ const uploadFile = async (file) => {
   const downloadURL = await getDownloadURL(response.ref);
   return downloadURL;
 };
+
 export default uploadFile;

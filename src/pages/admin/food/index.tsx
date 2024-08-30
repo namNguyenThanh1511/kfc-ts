@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Column } from "../../../component/DashboardTemplate";
 import {
   Button,
@@ -16,10 +16,33 @@ import {
 import TextArea from "antd/es/input/TextArea";
 import DashboardTemplate from "../../../component/DashboardTemplate";
 import { LoadingOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
+import api from "../../../config/api";
+import { Category } from "../../../model/category";
 
 function ManageFood() {
   const title = "food";
+  const [categories, setCategories] = useState<Category[]>([]);
 
+  const fetchCategories = async () => {
+    try {
+      const response = await api.get("category");
+      // setCategories() : async -> current categories may still hold its previous value
+      setCategories(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+  const categoriesOptions = useMemo(
+    () =>
+      categories.map((category: Category) => ({
+        label: category.name,
+        value: category.id,
+      })),
+    [categories]
+  );
   const columns: Column[] = [
     // khai bao kieu du lieu de dc nhac lenh
 
@@ -101,24 +124,9 @@ function ManageFood() {
       <Form.Item
         label="Category ID"
         name="categoryId"
-        rules={[{ required: true, message: "Please input the category ID!" }]}
+        rules={[{ required: true, message: "Please select the category !" }]}
       >
-        <Select
-          options={[
-            {
-              value: 1,
-              label: "Cate 1",
-            },
-            {
-              value: 2,
-              label: "Cate 2",
-            },
-            {
-              value: 3,
-              label: "Cate 3",
-            },
-          ]}
-        />
+        <Select options={categoriesOptions} />
       </Form.Item>
 
       <Form.Item
@@ -141,3 +149,11 @@ function ManageFood() {
 }
 
 export default ManageFood;
+//ver 1 optimize (30/8/2024 12:00) :
+//Combine state update : make the code more readable and simple , eliminate redundant state
+// -> Remove variable fetchedCategories
+// -> Replace with setCategories() as usual
+// -> operate useMemo to handle multi-rendering ( no need to always re-render -> useMemo() : just re-render when dependency change )
+// -> useMemo on categoriesOptions
+//
+// author : Nguyen Thanh Nam - Makise Kurisu
