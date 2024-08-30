@@ -3,6 +3,7 @@ import { Food } from "../../model/food";
 import "./index.scss";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../redux/feature/cartSlice";
+import { NumericFormat } from "react-number-format";
 type CardProps = {
   food: Food;
 };
@@ -17,7 +18,14 @@ function Card({ food }: CardProps) {
       <div className="food-card__wrapper">
         <div className="food-card__information">
           <div className="name">{food.name}</div>
-          <div className="price">{food.price}</div>
+          <div className="price">
+            <NumericFormat
+              value={food.price}
+              displayType="text"
+              thousandSeparator={true}
+              suffix=" VND"
+            />
+          </div>
         </div>
         <div className="food-card__description">
           {food.description.substring(0, 100)}

@@ -14,11 +14,20 @@ const cartSlice = createSlice({
         state[index].quantity++;
       }
     },
-    reset: (state, action) => [],
-    remove: (state: Food[], action: PayloadAction<Food>) => {
-      [];
+    reset: (state) => {
+      return [];
     },
-    changeQuantity: (state, action) => [],
+    remove: (state: Food[], action: PayloadAction<number>) => {
+      return state.filter((food) => food.id !== action.payload);
+    },
+    changeQuantity: (state, action: PayloadAction<Food>) => {
+      const { id, quantity } = action.payload;
+      const index = state.findIndex((food) => food.id === id);
+      if (index !== -1) {
+        // exist
+        state[index].quantity = quantity;
+      }
+    },
   },
 });
 

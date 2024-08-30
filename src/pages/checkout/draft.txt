@@ -1,0 +1,36 @@
+import React, { useEffect, useState } from "react";
+import "./index.scss";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import { Food } from "../../model/food";
+function CheckOutPage() {
+  const cart = useSelector((store: RootState) => store.cart);
+  const [totalPrice, setTotalPrice] = useState<number>(0);
+  useEffect(() => {
+    const total = cart.reduce((total, item: Food) => total + item.price * item.quantity, 0);
+    setTotalPrice(total);
+  }, [cart]);
+  const items = [];
+  return (
+    <div className="check-out">
+      <div className="check-out__item">
+        {cart.map((item: Food, index) => (
+          <div className="check-out__item_cart" key={item.id}>
+            <p>ID : {item.id}</p>
+            <p>Name : {item.name}</p>
+            <p>description :{item.description}</p>
+            <p>Price :{item.price * item.quantity}</p>
+            <p>Quantity : {item.quantity}</p>
+            <p>---------------------------------</p>
+          </div>
+        ))}
+        <p>-----------------------------------------------------------------------------------</p>
+        <div>Total price : {totalPrice}</div>
+      </div>
+
+      <div className="check-out__details"></div>
+    </div>
+  );
+}
+
+export default CheckOutPage;

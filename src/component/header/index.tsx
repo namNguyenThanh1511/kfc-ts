@@ -1,7 +1,7 @@
 import React from "react";
 import { UserOutlined } from "@ant-design/icons";
 import "./index.scss";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { Badge } from "antd";
@@ -12,12 +12,15 @@ function Header() {
   return (
     <div className="header">
       <div className="header__left">
-        <img
-          width={50}
-          src="https://static.kfcvietnam.com.vn/images/web/kfc-logo.svg?v=5.0"
-          alt="logo"
-          className="header__logo"
-        />
+        <Link to={"/"}>
+          <img
+            width={50}
+            src="https://static.kfcvietnam.com.vn/images/web/kfc-logo.svg?v=5.0"
+            alt="logo"
+            className="header__logo"
+          />
+        </Link>
+
         <ul className="header__navigation">
           <li>Thuc don</li>
           <li>Khuyen mai</li>
