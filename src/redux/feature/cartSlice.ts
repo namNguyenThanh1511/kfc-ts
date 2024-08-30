@@ -15,7 +15,9 @@ const cartSlice = createSlice({
       }
     },
     reset: (state, action) => [],
-    remove: () => [],
+    remove: (state: Food[], action: PayloadAction<Food>) => {
+      [];
+    },
     changeQuantity: (state, action) => [],
   },
 });
