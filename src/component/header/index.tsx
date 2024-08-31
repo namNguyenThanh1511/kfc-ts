@@ -7,31 +7,32 @@ import { RootState } from "../../redux/store";
 import { Badge } from "antd";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import styled from "styled-components";
+const NavUnlisted = styled.ul`
+  display: flex;
+  gap: 15px;
+  a {
+    text-decoration: none;
+  }
+
+  li {
+    list-style: none;
+    font-size: 1.28571429rem;
+    font-weight: 600;
+    color: #202114;
+    text-transform: uppercase;
+    padding-bottom: 5px;
+  }
+
+  .current {
+    li {
+      border-bottom: 2px solid black;
+    }
+  }
+`; // dùng thư viện styled-components để style component
 function Header() {
   const navigate = useNavigate();
   const cart = useSelector((store: RootState) => store.cart);
-  const NavUnlisted = styled.ul`
-    display: flex;
-    gap: 15px;
-    a {
-      text-decoration: none;
-    }
 
-    li {
-      list-style: none;
-      font-size: 1.28571429rem;
-      font-weight: 600;
-      color: #202114;
-      text-transform: uppercase;
-      padding-bottom: 5px;
-    }
-
-    .current {
-      li {
-        border-bottom: 2px solid black;
-      }
-    }
-  `; // dùng thư viện styled-components để style component
   const links = [
     {
       name: "Home",

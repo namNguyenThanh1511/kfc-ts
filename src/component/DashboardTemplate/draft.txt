@@ -1,0 +1,144 @@
+
+-----------------Ver 1 : 
+import React, { useEffect, useState } from "react";
+import { Column } from "../../../component/DashboardTemplate";
+import {
+  Button,
+  Form,
+  Image,
+  Input,
+  InputNumber,
+  message,
+  Select,
+  Upload,
+  UploadProps,
+} from "antd";
+import DashboardTemplate from "../../../component/DashboardTemplate";
+import { UploadOutlined } from "@ant-design/icons";
+import api from "../../../config/api";
+import { Category } from "../../../model/category";
+
+function ManageFood() {
+  const title = "food";
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [categoriesOptions, setCategoriesOptions] = useState([]); // initialize as state to render 
+
+  const fetchCategories = async () => {
+    const response = await api.get("category");
+    const fetchedCategories = response.data;
+    setCategories(fetchedCategories);
+
+    setCategoriesOptions( // this is not optimized -> because it would cause multi-render when fetching , 
+                          //    -> useMemo store previos value , if changes anything -> it render when needed
+      fetchedCategories.map((category: Category) => ({
+        label: category.name,
+        value: category.id,
+      }))
+    );
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const columns: Column[] = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+    },
+    {
+      title: "Price",
+      dataIndex: "price",
+      key: "price",
+    },
+    {
+      title: "Category ID",
+      dataIndex: "categoryId",
+      key: "categoryId",
+    },
+    {
+      title: "Image",
+      dataIndex: "image",
+      key: "image",
+      render: (value) => <Image width={200} src={value} />,
+    },
+  ];
+
+  const props: UploadProps = {
+    name: "file",
+    action: "https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload",
+    headers: {
+      authorization: "authorization-text",
+    },
+    onChange(info) {
+      if (info.file.status !== "uploading") {
+        console.log(info.file, info.fileList);
+      }
+      if (info.file.status === "done") {
+        message.success(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === "error") {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+  };
+
+  const formItems = (
+    <>
+      <Form.Item
+        label="Name"
+        name="name"
+        rules={[{ required: true, message: "Please input the product name!" }]}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        label="Description"
+        name="description"
+        rules={[{ required: true, message: "Please input the product description!" }]}
+      >
+        <Input.TextArea rows={4} />
+      </Form.Item>
+
+      <Form.Item
+        label="Price"
+        name="price"
+        rules={[{ required: true, message: "Please input the product price!" }]}
+      >
+        <InputNumber min={0} />
+      </Form.Item>
+
+      <Form.Item
+        label="Category ID"
+        name="categoryId"
+        rules={[{ required: true, message: "Please select a category!" }]}
+      >
+        <Select options={categoriesOptions} />
+      </Form.Item>
+
+      <Form.Item
+        label="Image"
+        name="image"
+        rules={[{ required: true, message: "Please upload an image!" }]}
+      >
+        <Upload {...props}>
+          <Button icon={<UploadOutlined />}>Click to Upload</Button>
+        </Upload>
+      </Form.Item>
+    </>
+  );
+
+  return (
+    <div>
+      <DashboardTemplate apiURI="product" formItems={formItems} title={title} columns={columns} />
+    </div>
+  );
+}
+
+export default ManageFood;
