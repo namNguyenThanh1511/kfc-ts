@@ -43,16 +43,20 @@ function DashboardTemplate({ columns, title, formItems, apiURI }: DashboardTempl
         dataIndex: "id",
         key: "id",
         render: (id, record) => (
-          <>
+          <div style={{ gap: "10px", display: "flex" }}>
             <Popconfirm
               title={`Delete ${title}`}
               description="Are you sure to delete ?"
               onConfirm={() => handleDelete(id)}
             >
-              <Button>Delete</Button>
+              <Button type="primary" danger>
+                Delete
+              </Button>
             </Popconfirm>
-
+            <span style={{ margin: "10px 5px" }}>|</span>
             <Button
+              type="primary"
+              style={{ backgroundColor: "orange" }}
               onClick={() => {
                 const newRecord = { ...record };
                 console.log(record);
@@ -86,7 +90,7 @@ function DashboardTemplate({ columns, title, formItems, apiURI }: DashboardTempl
             >
               Update
             </Button>
-          </>
+          </div>
         ),
       },
     ];
