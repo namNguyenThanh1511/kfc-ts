@@ -1,26 +1,34 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import "./index.scss";
 import FoodList from "../../component/list-food";
 import Carousel from "../../component/carousel";
 import SearchBar from "../../component/search-bar";
+import { Category } from "../../model/category";
+import api from "../../config/api";
 function Home() {
-  const [count, setCount] = useState(0);
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await api.get("category");
+      // setCategories() : async -> current categories may still hold its previous value
+      setCategories(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
-    // mỗi lần gọi hàm sẽ tạo mới 1 lần và chỉ chạy lại hàm -> ko tạo mới lần nữa => dùng prev để lưu lại value của biến cũ -> mới cộng thêm đc
-    const i = setInterval(() => {
-      console.log("interval running...");
-      setCount((prev) => prev + 1);
-    }, 1000);
-    return () => {
-      clearInterval(i); // clear để khi chạy useEffect một lần nữa sẽ ko bị đè lệnh
-    };
-  }, []);
+    fetchCategories();
+  }, [categories]);
+
   return (
     <div>
-      
       <Carousel apiURI="product" />
-      <FoodList />
-      <p> Count is : {count} </p>
+      {categories.map((category) => (
+        <>
+          <FoodList title={category.description} category={category.id} />
+        </>
+      ))}
     </div>
   );
 }

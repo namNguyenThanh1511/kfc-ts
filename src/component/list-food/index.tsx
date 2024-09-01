@@ -5,10 +5,11 @@ import api from "../../config/api";
 import { toast } from "react-toastify";
 import "./index.scss";
 type FoodListProps = {
-  foods: Food[];
+  title?: string;
+  category?: string;
 };
 
-function FoodList() {
+function FoodList({ title, category }: FoodListProps) {
   const [foods, setFoods] = useState<Food[]>([]);
 
   const fetchFoods = async () => {
@@ -27,12 +28,19 @@ function FoodList() {
   }, []);
 
   return (
-    <div className="foodList">
-      {foods.map((food, index) => (
-        <>
-          <Card food={food} />
-        </>
-      ))}
+    <div>
+      <h1>{title}</h1>
+      <div className="foodList">
+        {foods.map((food, index) => {
+          if (food.categoryId === category) {
+            return (
+              <>
+                <Card food={food} />
+              </>
+            );
+          }
+        })}
+      </div>
     </div>
   );
 }
