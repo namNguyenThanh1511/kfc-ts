@@ -210,7 +210,7 @@ function DashboardTemplate({ columns, title, formItems, apiURI }: DashboardTempl
   return (
     <div>
       <SearchBar apiURI={apiURI} setResults={setSearchResult} />
-      <SearchResultsList results={searchResults} />
+      <SearchResultsList apiURI={apiURI} results={searchResults} />
       <Button
         onClick={() => {
           setIsUpdate(false);

@@ -5,7 +5,12 @@ import { Food } from "../../model/food";
 import "./index.scss";
 type SearchResultProps = {
   result: Category | Food | User;
+  resultField: string;
 };
-export default function SearchResult({ result }: SearchResultProps) {
-  return <div className="search-result">{result.name}</div>;
+export default function SearchResult({ result, resultField }: SearchResultProps) {
+  return (
+    <div className="search-result">
+      {result[resultField] ? result[resultField] : "No data available"}
+    </div>
+  );
 }

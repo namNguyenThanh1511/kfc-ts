@@ -2,17 +2,27 @@ import React, { useState } from "react";
 import { SearchOutlined } from "@ant-design/icons";
 import "./index.scss";
 import api from "../../config/api";
-export type SearchBarProps = {
+type SearchBarProps = {
   setResults: any;
   apiURI: string;
 };
 export default function SearchBar({ setResults, apiURI }: SearchBarProps) {
   const [list, setList] = useState([]);
   const [input, setInput] = useState("");
+  let searchField = "";
+  switch (apiURI) {
+    case "voucher": {
+      searchField = "code";
+      break;
+    }
+    default: {
+      searchField = "name";
+    }
+  }
   const fetchData = async (value) => {
     const response = await api.get(apiURI);
     const filteredList = response.data.filter((item) => {
-      return value && item && item.name && item.name.toLowerCase().includes(value); // value : if empty return nothing instead of return all records
+      return value && item && item[searchField] && item[searchField].toLowerCase().includes(value); // value : if empty return nothing instead of return all records
     });
     setList(filteredList);
     setResults(filteredList);
