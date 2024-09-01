@@ -37,7 +37,7 @@ function DashboardTemplate({ columns, title, formItems, apiURI }: DashboardTempl
   const [isFetching, setIsFetching] = useState(true);
   const [tableColumns, setTableColumns] = useState<Column[]>([]);
   const [onSorting, setOnSorting] = useState(false);
-  const [searchResults, setSearchResult] = useState([]);
+
   useEffect(() => {
     const newColumns = [
       ...columns,
@@ -209,8 +209,8 @@ function DashboardTemplate({ columns, title, formItems, apiURI }: DashboardTempl
   };
   return (
     <div>
-      <SearchBar apiURI={apiURI} setResults={setSearchResult} />
-      <SearchResultsList apiURI={apiURI} results={searchResults} />
+      <SearchBar apiURI={apiURI}  />
+      {/* <SearchResultsList apiURI={apiURI} results={searchResults} /> */}
       <Button
         onClick={() => {
           setIsUpdate(false);

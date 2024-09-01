@@ -9,4 +9,8 @@
   max-height: 100px;
   overflow-y: scroll;
   padding: 5px;
+  display: none;
+}
+.active {
+  display: block;
 }
