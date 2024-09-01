@@ -14,6 +14,8 @@ import {
   sortDataSourceDESCByDateAndField,
   sortDataWithLocale,
 } from "../../utils/sorting";
+import SearchBar from "../search-bar";
+import SearchResultsList from "../searchResultsList";
 export interface Column {
   title: string;
   dataIndex: string;
@@ -35,6 +37,7 @@ function DashboardTemplate({ columns, title, formItems, apiURI }: DashboardTempl
   const [isFetching, setIsFetching] = useState(true);
   const [tableColumns, setTableColumns] = useState<Column[]>([]);
   const [onSorting, setOnSorting] = useState(false);
+  const [searchResults, setSearchResult] = useState([]);
   useEffect(() => {
     const newColumns = [
       ...columns,
@@ -206,6 +209,8 @@ function DashboardTemplate({ columns, title, formItems, apiURI }: DashboardTempl
   };
   return (
     <div>
+      <SearchBar apiURI={apiURI} setResults={setSearchResult} />
+      <SearchResultsList results={searchResults} />
       <Button
         onClick={() => {
           setIsUpdate(false);

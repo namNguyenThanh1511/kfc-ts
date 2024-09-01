@@ -1,0 +1,23 @@
+.input-wrapper {
+  background-color: #fff;
+  width: 100%;
+  border-radius: 60px;
+  height: 2.5rem;
+  box-shadow: 0 0 8px #ddd;
+  padding: 0 15px;
+  margin: 10px;
+  &__items {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
+  input {
+    border: none;
+    outline: none;
+    width: 100%;
+    height: 100%;
+    font-size: 1.1rem;
+    margin-left: 5px;
+  }
+}

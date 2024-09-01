@@ -14,6 +14,7 @@ function Register() {
   };
   return (
     <AuthenLayout>
+      <h1>Register</h1>
       <Form
         name="userForm"
         onFinish={handleRegister}
@@ -22,7 +23,11 @@ function Register() {
         }}
         layout="vertical"
       >
-        <Form.Item name="phone" label="Phone" rules={[{ required: true, message: "Please input your phone number!" }]}>
+        <Form.Item
+          name="phone"
+          label="Phone"
+          rules={[{ required: true, message: "Please input your phone number!" }]}
+        >
           <Input placeholder="Phone number" />
         </Form.Item>
 
@@ -58,7 +63,6 @@ function Register() {
           </Button>
         </Form.Item>
       </Form>
-      
     </AuthenLayout>
   );
 }

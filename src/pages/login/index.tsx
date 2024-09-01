@@ -33,6 +33,7 @@ function Login() {
   return (
     <AuthenLayout>
       <Form labelCol={{ span: 24 }} onFinish={handleLogin}>
+        <h1>Login</h1>
         <Form.Item
           label={"Phone"}
           name={"phone"}

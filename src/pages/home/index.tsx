@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./index.scss";
 import FoodList from "../../component/list-food";
 import Carousel from "../../component/carousel";
+import SearchBar from "../../component/search-bar";
 function Home() {
   const [count, setCount] = useState(0);
   useEffect(() => {
@@ -16,6 +17,7 @@ function Home() {
   }, []);
   return (
     <div>
+      
       <Carousel apiURI="product" />
       <FoodList />
       <p> Count is : {count} </p>
