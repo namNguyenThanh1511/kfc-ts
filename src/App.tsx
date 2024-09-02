@@ -10,6 +10,7 @@ import ManageFood from "./pages/admin/food";
 import ManageProductPage from "./pages/admin/product";
 import ManageVoucher from "./pages/admin/voucher";
 import CheckOutPage from "./pages/checkout";
+import MenuPage from "./pages/menu";
 
 function App() {
   const router = createBrowserRouter([
@@ -20,6 +21,10 @@ function App() {
         {
           path: "",
           element: <Home />,
+        },
+        {
+          path: "/menu",
+          element: <MenuPage />,
         },
         {
           path: "/login",

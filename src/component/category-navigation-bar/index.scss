@@ -1,0 +1,45 @@
+.CategoryNavBar {
+  width: fit-content;
+  height: fit-content;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  max-width: 100%;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  margin: 0 200px;
+  position: sticky;
+  top: 100px;
+  z-index: 1001;
+  background-color: white;
+  &__items {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    padding: 20px 20px;
+
+    a {
+      text-decoration: none;
+      color: black;
+      font-weight: 700;
+      font-size: 1.42857143rem;
+      font-family: Oswald, sans-serif;
+      &::after {
+        content: "";
+        display: block;
+        width: 0;
+        height: 2px;
+        background-color: #e4002b;
+      }
+      &:hover {
+        &::after {
+          content: "";
+          display: block;
+          width: 100%;
+          height: 3px;
+          background-color: #e4002b;
+        }
+      }
+    }
+  }
+}

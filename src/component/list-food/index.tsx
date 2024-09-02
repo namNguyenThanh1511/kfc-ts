@@ -33,7 +33,7 @@ function FoodList({ category, title }: FoodListProps) {
       });
       setFilteredFoods(filtered);
     } else {
-      setFilteredFoods([]);
+      setFilteredFoods(foods);
     }
   }, [foods, category]);
   if (filteredFoods.length === 0) {
@@ -41,9 +41,9 @@ function FoodList({ category, title }: FoodListProps) {
     return null;
   }
   return (
-    <div className="foodList-wrapper">
+    <div className="foodList-wrapper" id={category}>
       {title && <h1>{title}</h1>}
-      <div className="foodList">
+      <div className="foodList"   >
         {filteredFoods.map((food, index) => (
           <>
             <Card food={food} />

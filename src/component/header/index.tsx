@@ -40,7 +40,7 @@ function Header() {
     },
     {
       name: "Thực đơn",
-      path: "/",
+      path: "/menu",
     },
     {
       name: "Khuyến mãi",

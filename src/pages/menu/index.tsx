@@ -5,8 +5,8 @@ import Carousel from "../../component/carousel";
 import SearchBar from "../../component/search-bar";
 import { Category } from "../../model/category";
 import api from "../../config/api";
-import MenuPage from "../menu";
-function Home() {
+import CategoryNavBar from "../../component/category-navigation-bar";
+function MenuPage() {
   const [categories, setCategories] = useState<Category[]>([]);
 
   const fetchCategories = async () => {
@@ -23,11 +23,17 @@ function Home() {
   }, [categories]);
 
   return (
-    <div>
-      <Carousel apiURI="product" />
-      <MenuPage />
+    <div style={{ paddingTop: "80px" }}>
+      <CategoryNavBar categories={categories} />
+      <div>
+        {categories.map((category) => (
+          <div id={category.id}>
+            <FoodList title={category.description} category={category.id} />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
 
-export default Home;
+export default MenuPage;
