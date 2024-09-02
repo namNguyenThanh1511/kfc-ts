@@ -1,6 +1,6 @@
 .CategoryNavBar {
   width: fit-content;
-  height: 73px;
+  height: 50px;
   border: 2px solid rgba(0, 0, 0, 0.1);
   max-width: 100%;
   border-top: none;
@@ -20,10 +20,12 @@
 
     a {
       text-decoration: none;
-      color: black;
-      font-weight: 700;
+      opacity: 1;
+      color: rgba(0, 0, 0, 0.5);
+
       font-size: 1.42857143rem;
       font-family: Oswald, sans-serif;
+      transition: all 0.5s;
       &::after {
         content: "";
         display: block;
@@ -32,6 +34,7 @@
         background-color: #e4002b;
       }
       &:hover {
+        color: black;
         &::after {
           content: "";
           display: block;
@@ -43,6 +46,9 @@
     }
   }
   .active {
+    color: black;
+    font-weight: bold;
+
     &::after {
       content: "";
       display: block;

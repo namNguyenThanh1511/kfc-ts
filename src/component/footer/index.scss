@@ -1,0 +1,26 @@
+.footer {
+  background-color: black;
+  height: 586px;
+  width: 100%;
+  color: #ababab;
+  &__upper {
+    height: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    ul {
+      list-style: none;
+    }
+  }
+  &__lower {
+    height: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    ul {
+      list-style: none;
+    }
+  }
+}
