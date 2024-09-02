@@ -22,7 +22,12 @@ export default function SearchBar({ apiURI }: SearchBarProps) {
   const fetchData = async (value) => {
     const response = await api.get(apiURI);
     const filteredList = response.data.filter((item) => {
-      return value && item && item[searchField] && item[searchField].includes(value); // value : if empty return nothing instead of return all records
+      return (
+        value &&
+        item &&
+        item[searchField] &&
+        item[searchField].toLowerCase().includes(value.toLowerCase())
+      ); // value : if empty return nothing instead of return all records
     });
     setList(filteredList);
     console.log(filteredList);
