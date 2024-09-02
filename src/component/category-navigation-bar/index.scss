@@ -1,6 +1,6 @@
 .CategoryNavBar {
   width: fit-content;
-  height: fit-content;
+  height: 73px;
   border: 2px solid rgba(0, 0, 0, 0.1);
   max-width: 100%;
   border-top: none;
@@ -40,6 +40,15 @@
           background-color: #e4002b;
         }
       }
+    }
+  }
+  .active {
+    &::after {
+      content: "";
+      display: block;
+      width: 100%;
+      height: 3px;
+      background-color: #e4002b;
     }
   }
 }
