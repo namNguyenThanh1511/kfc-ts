@@ -1,6 +1,6 @@
 import { Button, Form, Input, Modal, Popconfirm, Select, Table } from "antd";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { toast } from "react-toastify";
 import { useForm } from "antd/es/form/Form";
@@ -37,7 +37,8 @@ function DashboardTemplate({ columns, title, formItems, apiURI }: DashboardTempl
   const [isFetching, setIsFetching] = useState(true);
   const [tableColumns, setTableColumns] = useState<Column[]>([]);
   const [onSorting, setOnSorting] = useState(false);
-
+  const [sortField, setSortField] = useState("");
+  const excludedFields = ["image", "id", "description"];
   useEffect(() => {
     const newColumns = [
       ...columns,
@@ -113,7 +114,7 @@ function DashboardTemplate({ columns, title, formItems, apiURI }: DashboardTempl
         sortedData = response.data;
       }
       if (onSorting) {
-        sortedData = sortDataBy(response.data, "value", "ASC");
+        sortedData = sortDataBy(response.data, sortField, "ASC");
       }
       console.log("fetched");
       setIsFetching(false);
@@ -204,12 +205,17 @@ function DashboardTemplate({ columns, title, formItems, apiURI }: DashboardTempl
       return column;
     }
   });
-  const handleOnSorting = () => {
+  const handleOnSorting = (field) => {
+    setSortField(field);
     setOnSorting(!onSorting);
   };
+  const fieldsObjectList = Object.keys(dataSource[0] || {}).filter(
+    (key) => !excludedFields.includes(key)
+  );
+
   return (
     <div>
-      <SearchBar apiURI={apiURI}  />
+      <SearchBar apiURI={apiURI} />
       {/* <SearchResultsList apiURI={apiURI} results={searchResults} /> */}
       <Button
         onClick={() => {
@@ -220,13 +226,16 @@ function DashboardTemplate({ columns, title, formItems, apiURI }: DashboardTempl
       >
         Add new {title}
       </Button>
-      <Button
-        onClick={() => {
-          handleOnSorting();
-        }}
-      >
-        Sort data by value
-      </Button>
+      {fieldsObjectList.map((field) => (
+        <Button
+          onClick={() => {
+            handleOnSorting(field);
+          }}
+        >
+          Sort data by {field}
+        </Button>
+      ))}
+
       <Table columns={tableColumns} dataSource={dataSource} loading={isFetching} />
       <Modal
         open={isOpenModal}

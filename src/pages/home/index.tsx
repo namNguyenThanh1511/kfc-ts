@@ -25,7 +25,7 @@ function Home() {
   return (
     <div>
       <Carousel apiURI="product" />
-      <MenuPage />
+      {/* <MenuPage /> */}
     </div>
   );
 }
